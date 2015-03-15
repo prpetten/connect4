@@ -9,16 +9,16 @@ class ConnectFour
 
   addPiece: (event) =>
     event.preventDefault()
+    turn = @whoseTurn()
     dropSpot = $(event.currentTarget)
     columnNum = dropSpot.data('column-num')
     dropColumn = @columns[columnNum - 1]
-    turn = @whoseTurn()
-    dropColumn.dropPiece(turn)
+    return unless dropColumn.dropPiece(turn)
     @didTheyWin(turn)
-    if @gameover
-      @displayWinner(turn)
-    else
-      @switchColors()
+    return @displayWinner(turn) if @gameOver
+    @didTheyDraw()
+    return @displayDraw() if @gameOver
+    @switchColors()
 
   whoseTurn: ->
     if $('.drop-row').hasClass('red-turn')
@@ -32,6 +32,12 @@ class ConnectFour
     @testPaths(@transpose(matrix), color)
     @testPaths(@diagonals(matrix), color)
 
+  didTheyDraw: ->
+    matrix = (column.colors() for column in @columns)
+    start = matrix.toString().indexOf 'white'
+    if start == -1
+      @stopPlaying()
+
   switchColors: ->
     $('.drop-row').toggleClass('red-turn').toggleClass('black-turn')
 
@@ -41,15 +47,20 @@ class ConnectFour
   winPath: (path, color) ->
     start =  path.toString().indexOf "#{color},#{color},#{color},#{color}"
     if start != -1
-      @weHaveAWinner(color)
+      @stopPlaying()
 
-  weHaveAWinner: (color) ->
-    @gameover = true
+  stopPlaying: ->
+    @gameOver = true
 
   displayWinner: (color) ->
     @winner.removeClass('none')
     @winner.addClass(color)
     @winner.append("#{color} wins!")
+
+  displayDraw: ->
+    @winner.removeClass('none')
+    @winner.addClass('blue')
+    @winner.append('Draw')
 
   transpose: (matrix) ->
     Object.keys(matrix[0]).map (column) ->
@@ -75,9 +86,12 @@ class ConnectColumn
     @spots = (new ConnectSpot($("##{@column.data('column-num')}-#{spotNum}")) for spotNum in [1..6])
 
   dropPiece: (color) =>
-    emptySpots = (spot for spot in @spots when spot.color is 'white')
-    spot = emptySpots[0]
-    spot.setColor(color)
+    bottomEmptySpot = (spot for spot in @spots when spot.color is 'white')[0]
+    if bottomEmptySpot
+      bottomEmptySpot.setColor(color)
+      true
+    else
+      false
 
   colors: =>
     spot.color for spot in @spots
