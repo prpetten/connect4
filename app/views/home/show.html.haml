@@ -1,0 +1,12 @@
+.blast-radius
+  .drop-row.red-turn
+    - (1..7).each do |column|
+      .spot
+        %a.drop-spot.position{ href: '#', data: { column_num: column } }
+  .gameboard
+    - (1..7).each do |column|
+      .column{ id: "column-#{column}", data: { column_num: column } }
+        - (1..6).to_a.reverse.each do |row|
+          .spot
+            .position{ id: "#{column}-#{row}" }
+  .winner.none

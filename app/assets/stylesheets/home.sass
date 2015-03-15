@@ -1,0 +1,87 @@
+body
+  width: 100vw
+  height: 100vh
+  display: inline-block
+  text-align: center
+  float: center
+
+.position.black
+  background-color: black
+
+.position.red
+  background-color: red
+
+.blast-radius
+  text-align: center
+  float: center
+  width: 750px
+  display: inline-block
+  vertical-align: top
+
+.drop-row
+  display: inline-block
+  height: 100px
+  width: 750px
+
+.gameboard
+  display: inline-block
+  background-color: #FFFF85
+  width: 750px
+  height: 600px
+  vertical-align: top
+
+.spot
+  height: 100px
+  width: 100px
+  display: inline-block
+  text-align: center
+
+.column
+  width: 100px
+  height: 600px
+  display: inline-block
+  text-align: center
+
+.position
+  width: 80px
+  margin-top: 10px
+  height: 80px
+  display: inline-block
+  text-align: center
+  line-height: 80px
+  border-radius: 50%
+  background-color: #ffffff
+
+.drop-row .position:hover
+  border: 3px solid #dddddd
+
+.drop-row.black-turn .position:hover
+  background-color: black
+
+.drop-row.red-turn .position:hover
+  background-color: red
+
+.winner
+  position: absolute
+  top: 0
+  left: 0
+  line-height: 100vh
+  height: 100vh
+  width: 100vw
+  text-align: center
+  background-color: #ffffff
+  font-size: 20vh
+  font-weight: bold
+  text-transform: uppercase
+  font-family: 'Helvetica Neue'
+  opacity: 0.8
+  z-index: 100
+
+.winner.none
+  display: none
+
+.winner.black
+  color: black
+
+.winner.red
+  color: red
