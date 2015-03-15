@@ -14,9 +14,10 @@ class ConnectFour
     columnNum = dropSpot.data('column-num')
     dropColumn = @columns[columnNum - 1]
     return unless dropColumn.dropPiece(turn)
-    @didTheyWin(turn)
+    currentBoard = (column.colors() for column in @columns)
+    @didTheyWin(currentBoard, turn)
     return @displayWinner(turn) if @gameOver
-    @didTheyDraw()
+    @didTheyDraw(currentBoard)
     return @displayDraw() if @gameOver
     @switchColors()
 
@@ -26,16 +27,13 @@ class ConnectFour
     else
       'black'
 
-  didTheyWin: (color) ->
-    matrix = (column.colors() for column in @columns)
-    @testPaths(matrix, color)
-    @testPaths(@transpose(matrix), color)
-    @testPaths(@diagonals(matrix), color)
+  didTheyWin: (currentBoard, color) ->
+    @testPaths(currentBoard, color)
+    @testPaths(@transpose(currentBoard), color)
+    @testPaths(@diagonals(currentBoard), color)
 
-  didTheyDraw: ->
-    matrix = (column.colors() for column in @columns)
-    start = matrix.toString().indexOf 'white'
-    if start == -1
+  didTheyDraw: (currentBoard) ->
+    if (currentBoard.toString().indexOf 'white') == -1
       @stopPlaying()
 
   switchColors: ->
